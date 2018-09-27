@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 
 namespace UndoSample
 {
@@ -18,42 +18,40 @@ namespace UndoSample
 
         public string Log { get; set; }
 
-
-
         public ViewModel()
         {
             UndoStackSize = 0;
             TextBox = "A text box";            
             DataGrid = new ObservableCollection<DataRecord>();
-            DataGrid.Add(new DataRecord());
-            DataGrid.Add(new DataRecord());
-            DataGrid.Add(new DataRecord());
             DataGrid.CollectionChanged += DataGrid_CollectionChanged;
+            DataGrid.Add(new DataRecord());
+            DataGrid.Add(new DataRecord());
+            DataGrid.Add(new DataRecord());
+
             LoggingEnabled = true;
         }
 
         private void DataGrid_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            if (e.NewItems != null)
+                foreach (var item in e.NewItems.Cast<DataRecord>())
+                    item.PropertyChangedExt += (p, b, a) => OnPropertyChanged($"{nameof(DataGrid)}.{p}", b, a);
             AppendLog($"DataGrid changed with action {e.Action}");
         }
 
         public void OnPropertyChanged(string propertyName, object before, object after)
-        {            
-            //Perform property validation
-            var propertyChanged = PropertyChanged;
-            if (propertyChanged != null)
-            {
-                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-            if (LoggingEnabled && propertyName != nameof(Log))
+            if (propertyName != nameof(Log))
                 AppendLog($"{propertyName} set from '{before}' to '{after}'");
 
         }
 
         private void AppendLog(string text)
         {
-            Log += (string.IsNullOrEmpty(Log) ? "" : "\n") + text;
+            if (LoggingEnabled)
+                Log += (string.IsNullOrEmpty(Log) ? "" : "\n") + text;
         }
     }
 }
