@@ -25,7 +25,7 @@ namespace UndoSample
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            PropertyChangedExt?.Invoke(propertyName, before, after);
+            PropertyChangedExt?.Invoke(this, propertyName, before, after);
         }
     }
 }

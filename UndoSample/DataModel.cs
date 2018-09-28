@@ -4,54 +4,41 @@ using System.Linq;
 
 namespace UndoSample
 {
-    class ViewModel : INotifyPropertyChanged
+    class DataModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private bool LoggingEnabled { get; }
+        private bool Initialized;
+        public DebugModel DebugModel;
 
-        public int UndoStackSize { get; set; }
-        public int RedoStackSize { get; set; }
         public string TextBox { get; set; }
-
+        public int Slider { get; set; }
         public ObservableCollection<DataRecord> DataGrid {get;set;}
 
-        public string Log { get; set; }
-
-        public ViewModel()
+        public DataModel()
         {
-            UndoStackSize = 0;
             TextBox = "A text box";            
             DataGrid = new ObservableCollection<DataRecord>();
-            DataGrid.CollectionChanged += DataGrid_CollectionChanged;
+            DataGrid.CollectionChanged += DataGrid_CollectionChanged;            
             DataGrid.Add(new DataRecord());
             DataGrid.Add(new DataRecord());
             DataGrid.Add(new DataRecord());
 
-            LoggingEnabled = true;
+            Initialized = true;
         }
 
         private void DataGrid_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
                 foreach (var item in e.NewItems.Cast<DataRecord>())
-                    item.PropertyChangedExt += (p, b, a) => OnPropertyChanged($"{nameof(DataGrid)}.{p}", b, a);
-            AppendLog($"DataGrid changed with action {e.Action}");
+                    item.PropertyChangedExt += (s, p, b, a) => DebugModel?.AddPropertyUndo(s, p, b, a);
+            DebugModel?.AppendLog($"DataGrid changed with action {e.Action}");
         }
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-            if (propertyName != nameof(Log))
-                AppendLog($"{propertyName} set from '{before}' to '{after}'");
-
-        }
-
-        private void AppendLog(string text)
-        {
-            if (LoggingEnabled)
-                Log += (string.IsNullOrEmpty(Log) ? "" : "\n") + text;
+            DebugModel?.AddPropertyUndo(this, propertyName, before, after);
         }
     }
 }
