@@ -16,6 +16,12 @@ namespace UndoSample
         {
             InitializeComponent();
             Model.DebugModel = DebugModel;
+            UndoManager.StackChanged += UndoManager_StackChanged;
+        }
+
+        private void UndoManager_StackChanged(object sender, StackChangeEventArgs e)
+        {
+            Text.LockCurrentUndoUnit();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
