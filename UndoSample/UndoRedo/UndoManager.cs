@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace UndoSample.UndoRedo
 {
@@ -23,6 +24,9 @@ namespace UndoSample.UndoRedo
 
         public static bool Push(IUndoable undoable)
         {
+            if (IsPerformingUndoOrRedo)
+                return false;
+
             if (!undoable.CanUndo)
                 return false;
 
@@ -32,12 +36,14 @@ namespace UndoSample.UndoRedo
             return true;
         }
 
-        public static void AddPropertyUndo(object target, PropertyChangedVerboseEventArgs args)
+        public static void PushFromEvent(object target, PropertyChangedVerboseEventArgs args)
         {
-            if (IsPerformingUndoOrRedo)
-                return;
+            Push(new PropertyUndoable(target, args));                       
+        }
 
-            Push(new PropertyUndoable(target, args));
+        internal static void PushFromEvent(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            Push(new CollectionUndoable(sender, e));
         }
 
         private static void PerformUndo(Stack<IUndoable> From, Stack<IUndoable> To, Action<IUndoable> action)

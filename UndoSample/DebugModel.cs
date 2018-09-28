@@ -22,10 +22,9 @@ namespace UndoSample
             RedoStackSize = e.RedoStackSize;
         }
 
-        public void AddPropertyUndo(object target, PropertyChangedVerboseEventArgs a)
+        public void LogPropertyChange(object target, PropertyChangedVerboseEventArgs a)
         {
-            AppendLog($"{target.GetType()}.{a.PropertyName} set from '{a.Before}' to '{a.After}'");
-            UndoManager.AddPropertyUndo(target, a);
+            AppendLog($"{target.GetType()}.{a.PropertyName} set from '{a.Before}' to '{a.After}'");            
         }
 
         public void AppendLog(string text)

@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="DataRecord.cs" />
     <Compile Include="DebugModel.cs" />
+    <Compile Include="UndoRedo\CollectionUndoable.cs" />
     <Compile Include="UndoRedo\IUndoable.cs" />
     <Compile Include="UndoRedo\PropertyChangedVerboseEventArgs.cs" />
     <Compile Include="UndoRedo\PropertyUndoable.cs" />
