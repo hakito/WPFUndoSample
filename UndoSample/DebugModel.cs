@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using UndoSample.UndoRedo;
 
 namespace UndoSample
@@ -17,8 +13,13 @@ namespace UndoSample
 
         public DebugModel()
         {
-            UndoManager.UndoStack.CollectionChanged += (s, a) => UndoStackSize = UndoManager.UndoStack.Count;
-            UndoManager.RedoStack.CollectionChanged += (s, a) => RedoStackSize = UndoManager.RedoStack.Count;
+            UndoManager.StackChanged += UndoManager_StackChanged;
+        }
+
+        private void UndoManager_StackChanged(object sender, StackChangeEventArgs e)
+        {
+            UndoStackSize = e.UndoStackSize;
+            RedoStackSize = e.RedoStackSize;
         }
 
         public void AddPropertyUndo(object target, PropertyChangedVerboseEventArgs a)

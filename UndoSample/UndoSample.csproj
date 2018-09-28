@@ -61,6 +61,7 @@
     <Compile Include="UndoRedo\PropertyChangedVerboseEventArgs.cs" />
     <Compile Include="UndoRedo\PropertyUndoable.cs" />
     <Compile Include="DataModel.cs" />
+    <Compile Include="UndoRedo\StackChangeEventArgs.cs" />
     <Compile Include="UndoRedo\UndoBase.cs" />
     <Compile Include="UndoRedo\UndoManager.cs" />
     <Page Include="MainWindow.xaml">

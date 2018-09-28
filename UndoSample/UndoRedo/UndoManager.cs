@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace UndoSample.UndoRedo
 {
     public static class UndoManager
     {
         public static bool IsPerformingUndoOrRedo;
+        public static event EventHandler<StackChangeEventArgs> StackChanged;
 
-        public static ObservableCollection<IUndoable> UndoStack = new ObservableCollection<IUndoable>();
-        public static ObservableCollection<IUndoable> RedoStack = new ObservableCollection<IUndoable>();
+        private static Stack<IUndoable> UndoStack = new Stack<IUndoable>();
+        private static Stack<IUndoable> RedoStack = new Stack<IUndoable>();
 
         public static void Undo()
         {
@@ -22,20 +21,15 @@ namespace UndoSample.UndoRedo
             PerformUndo(RedoStack, UndoStack, (u) => u.Redo());
         }
 
-        private static void PerformUndo(ICollection<IUndoable> From, ICollection<IUndoable> To, Action<IUndoable> action)
+        public static bool Push(IUndoable undoable)
         {
-            IsPerformingUndoOrRedo = true;
-            try
-            {
-                var undoable = From.Last();
-                From.Remove(undoable);
-                action(undoable);
-                To.Add(undoable);
-            }
-            finally
-            {
-                IsPerformingUndoOrRedo = false;
-            }
+            if (!undoable.CanUndo)
+                return false;
+
+            UndoStack.Push(undoable);
+            RedoStack.Clear();
+            NotifyOfStackChange();
+            return true;
         }
 
         public static void AddPropertyUndo(object target, PropertyChangedVerboseEventArgs args)
@@ -43,8 +37,28 @@ namespace UndoSample.UndoRedo
             if (IsPerformingUndoOrRedo)
                 return;
 
-            UndoStack.Add(new PropertyUndoable(target, args));
-            RedoStack.Clear();
+            Push(new PropertyUndoable(target, args));
+        }
+
+        private static void PerformUndo(Stack<IUndoable> From, Stack<IUndoable> To, Action<IUndoable> action)
+        {
+            IsPerformingUndoOrRedo = true;
+            try
+            {
+                var undoable = From.Pop();
+                action(undoable);
+                To.Push(undoable);
+                NotifyOfStackChange();
+            }
+            finally
+            {
+                IsPerformingUndoOrRedo = false;
+            }
+        }
+
+        private static void NotifyOfStackChange()
+        {
+            StackChanged?.Invoke(null, new StackChangeEventArgs(UndoStack.Count, RedoStack.Count));
         }
     }
 }
