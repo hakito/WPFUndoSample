@@ -21,10 +21,10 @@ namespace UndoSample
             UndoManager.RedoStack.CollectionChanged += (s, a) => RedoStackSize = UndoManager.RedoStack.Count;
         }
 
-        public void AddPropertyUndo(object target, string propertyName, object before, object after)
+        public void AddPropertyUndo(object target, PropertyChangedVerboseEventArgs a)
         {
-            AppendLog($"{target.GetType()}.{propertyName} set from '{before}' to '{after}'");
-            UndoManager.AddPropertyUndo(target, propertyName, before, after);
+            AppendLog($"{target.GetType()}.{a.PropertyName} set from '{a.Before}' to '{a.After}'");
+            UndoManager.AddPropertyUndo(target, a);
         }
 
         public void AppendLog(string text)

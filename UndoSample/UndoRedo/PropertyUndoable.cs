@@ -1,34 +1,42 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace UndoSample.UndoRedo
 {
-    class PropertyUndoable : IUndoable
+    class PropertyUndoable : UndoBase
     {
         object Target { get; }
         PropertyInfo PropertyInfo { get; }
-        object OldValue { get; }
-        object NewValue { get; }
+        public PropertyChangedVerboseEventArgs Args { get; }
 
-        public bool CanRedo => true;
+        public override bool CanRedo => CanUndo;
+        public override bool CanUndo { get; }
 
-        public bool CanUndo => true;
-
-        public void Redo()
+        public override void DoRedo()
         {
-            PropertyInfo.SetValue(Target, NewValue);
+            PropertyInfo.SetValue(Target, Args.After);
         }
 
-        public void Undo()
+        public override void DoUndo()
         {
-            PropertyInfo.SetValue(Target, OldValue);
+            PropertyInfo.SetValue(Target, Args.Before);
         }
 
-        public PropertyUndoable(object target, string property, object oldValue)
+        public PropertyUndoable(object target, PropertyChangedVerboseEventArgs args)
         {
             Target = target;
-            PropertyInfo = target.GetType().GetProperty(property);
-            NewValue = PropertyInfo.GetValue(Target);
-            OldValue = oldValue;
+
+            try
+            {
+                PropertyInfo = target.GetType().GetProperty(args.PropertyName);
+                if (PropertyInfo == null)
+                    return;
+                CanUndo = true;
+            }
+            catch(Exception e)
+            { }
+
+            Args = args;
         }
     }
 }

@@ -30,7 +30,7 @@
             <Label Content="{Binding RedoStackSize}" />
         </StatusBar>
         <ScrollViewer DockPanel.Dock="Right" Width="400" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TextBox Name="DebugLog" IsEnabled="False" Text="{Binding Log}" Background="Black" Foreground="#FF12D82D">
+            <TextBox Name="DebugLog" IsEnabled="False" Text="{Binding Log}" Background="Black" Foreground="#FF12D82D" TextChanged="DebugLog_TextChanged">
                 <TextBox.DataContext>
                     <local:DebugModel/>
                 </TextBox.DataContext>

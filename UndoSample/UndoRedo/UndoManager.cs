@@ -38,12 +38,12 @@ namespace UndoSample.UndoRedo
             }
         }
 
-        public static void AddPropertyUndo(object target, string propertyName, object before, object after)
+        public static void AddPropertyUndo(object target, PropertyChangedVerboseEventArgs args)
         {
             if (IsPerformingUndoOrRedo)
                 return;
 
-            UndoStack.Add(new PropertyUndoable(target, propertyName, before));
+            UndoStack.Add(new PropertyUndoable(target, args));
             RedoStack.Clear();
         }
     }

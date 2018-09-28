@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using UndoSample.UndoRedo;
 
 namespace UndoSample
 {
@@ -8,7 +9,6 @@ namespace UndoSample
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private bool Initialized;
         public DebugModel DebugModel;
 
         public string TextBox { get; set; }
@@ -23,22 +23,21 @@ namespace UndoSample
             DataGrid.Add(new DataRecord());
             DataGrid.Add(new DataRecord());
             DataGrid.Add(new DataRecord());
-
-            Initialized = true;
         }
 
         private void DataGrid_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
                 foreach (var item in e.NewItems.Cast<DataRecord>())
-                    item.PropertyChangedExt += (s, p, b, a) => DebugModel?.AddPropertyUndo(s, p, b, a);
+                    item.PropertyChanged += (s, a) => DebugModel?.AddPropertyUndo(s, (PropertyChangedVerboseEventArgs) a);
             DebugModel?.AppendLog($"DataGrid changed with action {e.Action}");
         }
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            DebugModel?.AddPropertyUndo(this, propertyName, before, after);
+            var args = new PropertyChangedVerboseEventArgs(propertyName, before, after);
+            PropertyChanged?.Invoke(this, args);
+            DebugModel?.AddPropertyUndo(this, args);
         }
     }
 }

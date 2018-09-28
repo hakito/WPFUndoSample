@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using UndoSample.UndoRedo;
 
 namespace UndoSample
 {
@@ -9,7 +10,6 @@ namespace UndoSample
         static int lastId = 0;
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public event PropertyChangedEventHandlerExt PropertyChangedExt;
 
         public int Id { get; set; }
         public string Name { get; set; }
@@ -24,8 +24,7 @@ namespace UndoSample
 
         public void OnPropertyChanged(string propertyName, object before, object after)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            PropertyChangedExt?.Invoke(this, propertyName, before, after);
+            PropertyChanged?.Invoke(this, new PropertyChangedVerboseEventArgs(propertyName, before, after));
         }
     }
 }

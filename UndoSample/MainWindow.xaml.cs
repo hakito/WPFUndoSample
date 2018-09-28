@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using UndoSample.UndoRedo;
 
 namespace UndoSample
@@ -40,6 +41,11 @@ namespace UndoSample
         private void Redo_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = DebugModel.RedoStackSize > 0;
-        }        
+        }
+
+        private void DebugLog_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            (DebugLog.Parent as ScrollViewer)?.ScrollToBottom();
+        }
     }
 }
