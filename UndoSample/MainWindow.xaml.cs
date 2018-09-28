@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using UndoSample.UndoRedo;
 
 namespace UndoSample
 {
@@ -7,7 +8,6 @@ namespace UndoSample
     /// </summary>
     public partial class MainWindow : Window
     {
-
         private DataModel Model => (DataModel)DataContext;
         private DebugModel DebugModel => (DebugModel)DebugLog.DataContext;
 
@@ -24,7 +24,7 @@ namespace UndoSample
 
         private void Undo_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
-            DebugModel.Undo();
+            UndoManager.Undo();
         }
 
         private void Undo_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
@@ -34,7 +34,7 @@ namespace UndoSample
 
         private void Redo_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
-            DebugModel.Redo();
+            UndoManager.Redo();
         }
 
         private void Redo_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
