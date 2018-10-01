@@ -33,7 +33,7 @@ namespace UndoSample.UndoRedo
                     return;
                 CanUndo = true;
             }
-            catch(Exception e)
+            catch(Exception)
             { }
 
             Args = args;
