@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using UndoSample.UndoRedo;
 
 namespace UndoSample
@@ -16,12 +17,15 @@ namespace UndoSample
         {
             InitializeComponent();
             Model.DebugModel = DebugModel;
-            UndoManager.StackChanged += UndoManager_StackChanged;
         }
 
-        private void UndoManager_StackChanged(object sender, StackChangeEventArgs e)
+        private void CollapseUndoStackOfTextBoxBase(object sender, RoutedEventArgs e)
         {
-            Text.LockCurrentUndoUnit();
+            if (sender is TextBoxBase tb && tb.IsUndoEnabled)
+            {
+                tb.IsUndoEnabled = false;
+                tb.IsUndoEnabled = true;
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -49,7 +53,7 @@ namespace UndoSample
             e.CanExecute = DebugModel.RedoStackSize > 0;
         }
 
-        private void DebugLog_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void DebugLog_TextChanged(object sender, TextChangedEventArgs e)
         {
             (DebugLog.Parent as ScrollViewer)?.ScrollToBottom();
         }
