@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace UndoSample.UndoRedo
+namespace YaUnd.EventArgs
 {
     public class PropertyChangedVerboseEventArgs : PropertyChangedEventArgs
     {

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Reflection;
+using YaUnd.EventArgs;
 
-namespace UndoSample.UndoRedo
+namespace YaUnd.Undoables
 {
     class PropertyUndoable : UndoBase
     {
@@ -28,7 +29,7 @@ namespace UndoSample.UndoRedo
 
             try
             {
-                PropertyInfo = target.GetType().GetProperty(args.PropertyName);
+                PropertyInfo = target.GetType().GetTypeInfo().GetDeclaredProperty(args.PropertyName);
                 if (PropertyInfo == null)
                     return;
                 CanUndo = true;

@@ -57,14 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="DataRecord.cs" />
     <Compile Include="DebugModel.cs" />
-    <Compile Include="UndoRedo\CollectionUndoable.cs" />
-    <Compile Include="UndoRedo\IUndoable.cs" />
-    <Compile Include="UndoRedo\PropertyChangedVerboseEventArgs.cs" />
-    <Compile Include="UndoRedo\PropertyUndoable.cs" />
     <Compile Include="DataModel.cs" />
-    <Compile Include="UndoRedo\StackChangeEventArgs.cs" />
-    <Compile Include="UndoRedo\UndoBase.cs" />
-    <Compile Include="UndoRedo\UndoManager.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -111,6 +104,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\YaUnd\YaUnd.csproj">
+      <Project>{54c82cc9-20b7-4a04-bba2-24538a25d6cb}</Project>
+      <Name>YaUnd</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

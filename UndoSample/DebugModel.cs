@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
-using UndoSample.UndoRedo;
+using YaUnd;
+using YaUnd.EventArgs;
 
 namespace UndoSample
 {

@@ -1,4 +1,4 @@
-﻿namespace UndoSample.UndoRedo
+﻿namespace YaUnd.Undoables
 {
     public interface IUndoable
     {

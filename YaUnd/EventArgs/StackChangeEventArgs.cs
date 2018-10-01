@@ -1,4 +1,4 @@
-﻿namespace UndoSample.UndoRedo
+﻿namespace YaUnd.EventArgs
 {
     public class StackChangeEventArgs
     {

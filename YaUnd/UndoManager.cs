@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using YaUnd.EventArgs;
+using YaUnd.Undoables;
 
-namespace UndoSample.UndoRedo
+namespace YaUnd
 {
     public static class UndoManager
     {
@@ -49,7 +51,7 @@ namespace UndoSample.UndoRedo
             Push(new PropertyUndoable(target, args));                       
         }
 
-        internal static void PushFromEvent(object sender, NotifyCollectionChangedEventArgs e)
+        public static void PushFromEvent(object sender, NotifyCollectionChangedEventArgs e)
         {
             Push(new CollectionUndoable(sender, e));
         }
@@ -75,7 +77,7 @@ namespace UndoSample.UndoRedo
             StackChanged?.Invoke(null, new StackChangeEventArgs(UndoStack.Count, RedoStack.Count));
         }
 
-        internal static void EndBatchCollectReverse()
+        public static void EndBatchCollectReverse()
         {
             if (!IsBatchCollectingReverse)
                 throw new InvalidOperationException("Batch collection not started.");
@@ -88,7 +90,7 @@ namespace UndoSample.UndoRedo
             }
         }
 
-        internal static void StartBatchCollectReverse()
+        public static void StartBatchCollectReverse()
         {
             if (IsBatchCollectingReverse)
                 throw new InvalidOperationException("Batch collection already started.");

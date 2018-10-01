@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Specialized;
 
-namespace UndoSample.UndoRedo
+namespace YaUnd.Undoables
 {
     internal class CollectionUndoable : UndoBase
     {

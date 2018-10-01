@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UndoSample.UndoRedo
+namespace YaUnd.Undoables
 {
     public abstract class UndoBase : IUndoable
     {

@@ -2,7 +2,8 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using UndoSample.UndoRedo;
+using YaUnd;
+using YaUnd.EventArgs;
 
 namespace UndoSample
 {
