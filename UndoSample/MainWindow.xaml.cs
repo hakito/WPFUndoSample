@@ -28,6 +28,13 @@ namespace UndoSample
             }
         }
 
+        private void RowEditInBatch(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            UndoManager.StartBatchCollectReverse();
+            e.Row.BindingGroup.CommitEdit();
+            UndoManager.EndBatchCollectReverse();
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Model.DataGrid.RemoveAt(this.Table.SelectedIndex);

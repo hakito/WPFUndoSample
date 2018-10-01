@@ -6,9 +6,11 @@ namespace UndoSample.UndoRedo
 {
     public static class UndoManager
     {
-        public static bool IsPerformingUndoOrRedo;
+        public static bool IsBatchCollectingReverse { get; private set; }
+        public static bool IsPerformingUndoOrRedo { get; private set; }
         public static event EventHandler<StackChangeEventArgs> StackChanged;
 
+        private static Stack<IUndoable> InverseStack = new Stack<IUndoable>();
         private static Stack<IUndoable> UndoStack = new Stack<IUndoable>();
         private static Stack<IUndoable> RedoStack = new Stack<IUndoable>();
 
@@ -24,6 +26,12 @@ namespace UndoSample.UndoRedo
 
         public static bool Push(IUndoable undoable)
         {
+            if (IsBatchCollectingReverse)
+            {
+                InverseStack.Push(undoable);
+                return false;
+            }
+
             if (IsPerformingUndoOrRedo)
                 return false;
 
@@ -65,6 +73,26 @@ namespace UndoSample.UndoRedo
         private static void NotifyOfStackChange()
         {
             StackChanged?.Invoke(null, new StackChangeEventArgs(UndoStack.Count, RedoStack.Count));
+        }
+
+        internal static void EndBatchCollectReverse()
+        {
+            if (!IsBatchCollectingReverse)
+                throw new InvalidOperationException("Batch collection not started.");
+            IsBatchCollectingReverse = false;
+            
+            while (InverseStack.Count > 0)
+            {
+                var undoable = InverseStack.Pop();
+                Push(undoable);
+            }
+        }
+
+        internal static void StartBatchCollectReverse()
+        {
+            if (IsBatchCollectingReverse)
+                throw new InvalidOperationException("Batch collection already started.");
+            IsBatchCollectingReverse = true;
         }
     }
 }

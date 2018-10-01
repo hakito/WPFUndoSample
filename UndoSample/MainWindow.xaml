@@ -52,7 +52,8 @@
                 <Slider DockPanel.Dock="Bottom" VerticalAlignment="Top" Value="{Binding Slider}"/>
                 <Button Content="Remove selected entry" DockPanel.Dock="Bottom" Click="Button_Click"/>                
                 <ScrollViewer >
-                    <DataGrid  Name="Table" Margin="0,10,0,0" ItemsSource="{Binding DataGrid}" AutoGenerateColumns="True"/>
+                    <DataGrid  Name="Table" Margin="0,10,0,0" ItemsSource="{Binding DataGrid}" 
+                               AutoGenerateColumns="True" RowEditEnding="RowEditInBatch" />
                 </ScrollViewer>
             </DockPanel>            
         </DockPanel>
